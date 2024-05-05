@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Vendor as VendorTypes } from '../types/vendorType';
+import { Vendor as VendorTypes, VendorCreateRequest, VendorCreateResponse } from '../types/vendorType';
 import { Vendor } from '../models/index';
 
 export default class VendorController {
@@ -20,7 +20,7 @@ export default class VendorController {
   }
 
   static searchVendorByHospitalId(req: Request, res: Response, next: NextFunction): void {
-    let { hospitalId } = req.params;
+    let { hospitalId }: { hospitalId?: string } = req.params;
     let options = {
       where: {
         hospitalId: Number(hospitalId)
@@ -37,4 +37,27 @@ export default class VendorController {
         return next(err);
       })
   }
-}
+
+  static createVendor(req: Request, res: Response, next: NextFunction): void {
+    let { 
+      name,
+      hospitalId,
+      address
+    }: VendorCreateRequest = req.body;
+    let input = {
+      name,
+      hospitalId: Number(hospitalId),
+      address
+    }
+    Vendor.create(input)
+      .then((data: VendorCreateResponse) => {
+        return res.status(201).json({
+          status: 'success',
+          result: data
+        })
+      })
+      .catch((err: any) => {
+        return next(err);
+      })
+  }
+} 

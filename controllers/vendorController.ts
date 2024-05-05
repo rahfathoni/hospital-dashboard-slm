@@ -18,4 +18,23 @@ export default class VendorController {
         return next(err);
       })
   }
+
+  static searchVendorByHospitalId(req: Request, res: Response, next: NextFunction): void {
+    let { hospitalId } = req.params;
+    let options = {
+      where: {
+        hospitalId: Number(hospitalId)
+      }
+    };
+    Vendor.findAll(options)
+      .then((data: VendorTypes[]) => {
+        res.status(200).json({
+          status: 'success',
+          result: data
+        })
+      })
+      .catch((err: any) => {
+        return next(err);
+      })
+  }
 }

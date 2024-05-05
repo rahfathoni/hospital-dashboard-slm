@@ -4,5 +4,6 @@ import VendorController from '../controllers/vendorController';
 const router = express.Router();
 
 router.get('/', VendorController.readVendorList);
+router.get('/:hospitalId', VendorController.searchVendorByHospitalId);
 
 export default router;

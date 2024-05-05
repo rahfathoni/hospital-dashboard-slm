@@ -1,5 +1,5 @@
 import express from 'express';
-// import hospitalRouter from './hospitaltRouter';
+import hospitalRouter from './hospitalRouter';
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.get('/', (req, res) => {
     });
 });
 
-// router.use('/hospitals', hospitalRouter);
+router.use('/hospitals', hospitalRouter);
 
 export default router;

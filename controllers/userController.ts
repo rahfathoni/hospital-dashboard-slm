@@ -28,8 +28,7 @@ export default class UserController {
           status: 'success',
           results: {
             message: `Welcome ${data.username}`
-          },
-          data
+          }
         })
       })
       .catch((err: any) => {

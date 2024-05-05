@@ -1,0 +1,23 @@
+{
+  "name": "hospital-dashboard-server",
+  "version": "1.0.0",
+  "description": "server for hospital dashboard",
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon ./bin/http.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set node ./bin/http.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "sequelize": "^6.37.3",
+    "sequelize-cli": "^6.6.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
+}

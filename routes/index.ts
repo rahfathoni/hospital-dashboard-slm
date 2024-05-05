@@ -1,5 +1,6 @@
 import express from 'express';
 import hospitalRouter from './hospitalRouter';
+import vendorRouter from './vendorRouter';
 
 const router = express.Router();
 
@@ -10,5 +11,6 @@ router.get('/', (req, res) => {
 });
 
 router.use('/hospitals', hospitalRouter);
+router.use('/vendors', vendorRouter);
 
 export default router;

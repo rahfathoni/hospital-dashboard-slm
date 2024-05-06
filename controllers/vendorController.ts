@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { Vendor as VendorTypes, VendorCreateRequest, VendorCreateResponse } from '../types/vendorType';
-import { Vendor } from '../models/index';
+import { Vendor as VendorTypes, VendorCreateRequest } from '../types/vendorType';
+import { Hospital as HospitalTypes } from '../types/hospitalType'
+import { Vendor, Hospital } from '../models/index';
 
 export default class VendorController {
   static readVendorList(req: Request, res: Response, next: NextFunction): void {
@@ -21,16 +22,22 @@ export default class VendorController {
 
   static searchVendorByHospitalId(req: Request, res: Response, next: NextFunction): void {
     let { hospitalId }: { hospitalId?: string } = req.params;
-    let options = {
-      where: {
-        hospitalId: Number(hospitalId)
-      }
-    };
-    Vendor.findAll(options)
-      .then((data: VendorTypes[]) => {
+    Hospital.findByPk(hospitalId, {
+      include: Vendor
+    })
+      .then((hospital: HospitalTypes) => {
+        if(!hospital) {
+          return next({
+            name: 'NotFound',
+            errors: [{
+              message: `Hospital with ID ${hospital.id} not found`
+            }]
+          })
+        }
+        const vendors = hospital.Vendors;
         res.status(200).json({
           status: 'success',
-          result: data
+          result: vendors
         })
       })
       .catch((err: any) => {
@@ -41,23 +48,46 @@ export default class VendorController {
   static createVendor(req: Request, res: Response, next: NextFunction): void {
     let { 
       name,
-      hospitalId,
+      relatedHospital, // string 1,2,3...
       address
     }: VendorCreateRequest = req.body;
-    let input = {
-      name,
-      hospitalId: Number(hospitalId),
-      address
+
+    if (!relatedHospital) {
+      return next({
+        name: 'BadRequest',
+        errors: 'relatedHospital must be filled'
+      })
     }
-    Vendor.create(input)
-      .then((data: VendorCreateResponse) => {
-        return res.status(201).json({
+
+    Vendor.create({ name, address })
+      .then(async (newVendor: VendorTypes) => {
+        const hospitalIds: number[] = relatedHospital.split(',').map((id: string) => parseInt(id.trim(), 10));
+
+        await Promise.all(hospitalIds.map(async (hospitalId: number) => {
+          Hospital.findByPk(hospitalId)
+            .then(async (hospital: any) => {
+              if (!hospital) {
+                return next({
+                  name: 'NotFound',
+                  errors: [{
+                    message: `Hospital with ID ${hospital.id} not found`
+                  }]
+                })
+              }
+              await hospital.addVendor(newVendor);
+            })
+            .catch((err: any) => {
+              return next(err);
+            })
+        }));
+
+        res.status(201).json({
           status: 'success',
-          result: data
-        })
+          result: newVendor
+        });
       })
       .catch((err: any) => {
         return next(err);
       })
   }
-} 
+}

@@ -1,7 +1,6 @@
 export interface Vendor {
   id: number;
   name: string;
-  hospitalId: number;
   address: string;
   createdAt: string;
   updatedAt: string;
@@ -9,15 +8,6 @@ export interface Vendor {
 
 export interface VendorCreateRequest {
   name: string;
-  hospitalId: number;
+  relatedHospital: string;
   address: string;
-}
-
-export interface VendorCreateResponse {
-  id: number;
-  name: string;
-  hospitalId: number;
-  address: string;
-  createdAt: string;
-  updatedAt: string;
 }

@@ -11,29 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Vendor.belongsTo(models.Hospital, {
-        foreignKey: 'hospitalId'
-      })
+      Vendor.belongsToMany(models.Hospital, { through: 'HospitalVendor' });
     }
   }
   Vendor.init({
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        args: true,
+        msg: `Vendor already exist`
+      },
       validate: {
         notEmpty: {
           args: true,
           msg: `Name must be filled`
-        }
-      }
-    },
-    hospitalId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: `hospitalId must be filled`
         }
       }
     },

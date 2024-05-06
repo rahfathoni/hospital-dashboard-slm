@@ -10,12 +10,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      hospitalId: {
-        type: Sequelize.INTEGER
-      },
       address: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       createdAt: {

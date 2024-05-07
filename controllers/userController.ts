@@ -27,7 +27,8 @@ export default class UserController {
         res.status(201).json({
           status: 'success',
           results: {
-            message: `Welcome ${data.username}`
+            message: `Welcome ${data.username}`,
+            username: data.username
           }
         })
       })
